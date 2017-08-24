@@ -48,4 +48,12 @@ if [[ -n "$VALIDATOR_URL" ]]; then
   unset TMP_VU
 fi
 
+if [[ -n "$OAUTH2_REDIRECT_URL" ]]; then
+  sed -i "s|.*oauth2RedirectUrl:.*$||g" $INDEX_FILE
+  TMP_VU="$OAUTH2_REDIRECT_URL"
+  [[ "$OAUTH2_REDIRECT_URL" != "null" && "$OAUTH2_REDIRECT_URL" != "undefined" ]] && TMP_VU="\"${OAUTH2_REDIRECT_URL}\""
+  sed -i "s|\(url: .*,\)|\1\n    oauth2RedirectUrl: ${TMP_VU},|g" $INDEX_FILE
+  unset TMP_VU
+fi
+
 exec nginx -g 'daemon off;'
